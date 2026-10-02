@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-KURSY = (
+KURSY: tuple[str, ...] = (
     "Структуры данных",
     "Высшая математика",
     "Физика",
@@ -8,20 +8,23 @@ KURSY = (
     "Органическая химия",
 )
 
+OTSENKA_OT: int = 3
+OTSENKA_DO: int = 5
 
-def schitat_otsenku(kurs):
+
+def schitat_otsenku(kurs: str) -> int:
     while True:
         otsenka = input(f"Оценка по курсу {kurs}: ")
-        if otsenka.isdigit() and 3 <= int(otsenka) <= 5:
+        if otsenka.isdigit() and OTSENKA_OT <= int(otsenka) <= OTSENKA_DO:
             return int(otsenka)
-        print("Оценка должна быть целым числом от 3 до 5.")
+        print(f"Оценка должна быть целым числом от {OTSENKA_OT} до {OTSENKA_DO}.")
 
 
-def main():
-    otsenki_po_kursam = {kurs: [] for kurs in KURSY}
+def statistika_po_kursam() -> None:
+    otsenki_po_kursam: dict[str, list[int]] = {kurs: [] for kurs in KURSY}
 
     while True:
-        imya = input("Имя студента (Enter для завершения):\n")
+        imya = input("Имя студента (Enter для завершения): ")
         if not imya:
             break
         for kurs in KURSY:
@@ -33,8 +36,11 @@ def main():
 
     for kurs, otsenki in otsenki_po_kursam.items():
         sredniy = sum(otsenki) / len(otsenki)
-        print(f"{kurs}: средний балл {sredniy:.2f}, минимальная {min(otsenki)}, максимальная {max(otsenki)}")
+        print(
+            f"{kurs}: средний балл {sredniy:.2f}, "
+            f"минимальная {min(otsenki)}, максимальная {max(otsenki)}"
+        )
 
 
 if __name__ == "__main__":
-    main()
+    statistika_po_kursam()

@@ -2,21 +2,21 @@
 
 import string
 
-GLASNYE = "аеёиоуыэюя"
-SOGLASNYE = "бвгджзйклмнопрстфхцчшщъь"
+GLASNYE: str = "аеёиоуыэюя"
+SOGLASNYE: str = "бвгджзйклмнопрстфхцчшщъь"
 
 
-def main():
-    stroka = input("Введите слова через пробел: ")
-    slova = tuple(stroka.split())
+def analiz_stroki() -> None:
+    stroka: str = input("Введите слова через пробел: ")
+    slova: tuple[str, ...] = tuple(stroka.split())
 
     print(f"Кортеж слов: {slova}")
     print(f"Уникальных слов: {len(set(slova))}")
 
-    nizhniy_registr = stroka.lower()
-    glasnye = sum(1 for s in nizhniy_registr if s in GLASNYE)
-    soglasnye = sum(1 for s in nizhniy_registr if s in SOGLASNYE)
-    znaki = sum(1 for s in stroka if s in string.punctuation)
+    nizhniy_registr: str = stroka.lower()
+    glasnye: int = sum(1 for s in nizhniy_registr if s in GLASNYE)
+    soglasnye: int = sum(1 for s in nizhniy_registr if s in SOGLASNYE)
+    znaki: int = sum(1 for s in stroka if s in string.punctuation)
 
     print(f"Гласных: {glasnye}")
     print(f"Согласных: {soglasnye}")
@@ -24,4 +24,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    analiz_stroki()

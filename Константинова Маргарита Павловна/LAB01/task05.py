@@ -3,13 +3,13 @@
 import math
 
 
-def main():
-    vybor = input("1 - два катета, 2 - гипотенуза и катет: ")
+def tretya_storona() -> None:
+    vybor: str = input("1 - два катета, 2 - гипотенуза и катет: ")
 
     if vybor == "1":
-        a = float(input("Первый катет: "))
-        b = float(input("Второй катет: "))
-        storona = math.sqrt(a ** 2 + b ** 2)
+        a: float = float(input("Первый катет: "))
+        b: float = float(input("Второй катет: "))
+        storona: float = math.sqrt(a ** 2 + b ** 2)
     else:
         a = float(input("Гипотенуза: "))
         b = float(input("Известный катет: "))
@@ -19,4 +19,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    tretya_storona()
