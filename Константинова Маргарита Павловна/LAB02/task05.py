@@ -14,7 +14,7 @@ def faktorial_iterativno(n: int) -> int:
     return rezultat
 
 
-def vychislenie_faktoriala() -> None:
+if __name__ == "__main__":
     while True:
         vvod: str = input("Введите целое число: ")
         if vvod.isdigit():
@@ -22,9 +22,7 @@ def vychislenie_faktoriala() -> None:
         print("Нужно ввести целое число.")
 
     n: int = int(vvod)
-    print(f"Рекурсивно: {faktorial_rekursivno(n)}")
-    print(f"Итеративно: {faktorial_iterativno(n)}")
-
-
-if __name__ == "__main__":
-    vychislenie_faktoriala()
+    rekursivno = faktorial_rekursivno(n)
+    iterativno = faktorial_iterativno(n)
+    print(f"Рекурсивно: {rekursivno}")
+    print(f"Итеративно: {iterativno}")

@@ -8,10 +8,7 @@ def dlinnee_srednego(stroki: list[str]) -> list[str]:
     return [s for s in stroki if len(s) > srednyaya_dlina]
 
 
-def filtratsiya_strok() -> None:
-    stroki: list[str] = input("Введите строки через пробел: ").split()
-    print(dlinnee_srednego(stroki))
-
-
 if __name__ == "__main__":
-    filtratsiya_strok()
+    stroki: list[str] = input("Введите строки через пробел: ").split()
+    rezultat = dlinnee_srednego(stroki)
+    print(rezultat)

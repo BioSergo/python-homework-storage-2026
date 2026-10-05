@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 
 
-def proizvedenie_tselykh(*argumenty: object) -> int | None:
-    tselye: list[int] = [argument for argument in argumenty if type(argument) is int]
+def proizvedenie_tselykh(*args: object) -> int | None:
+    tselye: list[int] = [arg for arg in args if type(arg) is int]
 
     if not tselye:
-        for argument in argumenty:
-            print(argument, type(argument))
         return None
 
     proizvedenie: int = 1
-    for argument in tselye:
-        proizvedenie *= argument
+    for arg in tselye:
+        proizvedenie *= arg
     return proizvedenie
 
 
 if __name__ == "__main__":
-    print(proizvedenie_tselykh(2, "slovo", 3.5, 4))
-    print(proizvedenie_tselykh("a", 1.5, [1, 2]))
+    rezultat_1 = proizvedenie_tselykh(2, "slovo", 3.5, 4)
+    rezultat_2 = proizvedenie_tselykh("a", 1.5, [1, 2])
+    print(rezultat_1)
+    print(rezultat_2)
