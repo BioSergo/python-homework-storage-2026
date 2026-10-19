@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 
-def vse_razlichny(chisla):
+def vse_razlichny(chisla: list[float]) -> bool:
     return len(chisla) == len(set(chisla))
 
 
-def main():
-    chisla = [float(x) for x in input("Введите числа через пробел: ").split()]
+def proverka_chisel() -> None:
+    vvod: str = input("Введите числа через пробел: ")
+    chisla: list[float] = [float(x) for x in vvod.split()]
 
     if vse_razlichny(chisla):
         print("Все числа различны.")
@@ -15,4 +16,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    proverka_chisel()
