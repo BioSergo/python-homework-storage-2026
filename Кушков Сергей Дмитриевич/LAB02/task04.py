@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-target_letters = set("уыоэеаяиюёУЫОЭЕАЯИЮЁ")
+TARGET_LETTERS: list = ['а','и','е','у','ы','о','э','я','ю']
 
 def letter_dict(**words):
 
@@ -9,9 +9,10 @@ def letter_dict(**words):
 
         if isinstance(value, str):
 
+            lower_value = value.lower()
             char_num = 0
-            for char in value:
-                if char in target_letters:
+            for char in lower_value:
+                if char in TARGET_LETTERS:
                     char_num += 1
 
             if char_num >= 3:
@@ -22,13 +23,14 @@ def letter_dict(**words):
 
 if __name__ == '__main__':
 
-    print(letter_dict(
+    letters = letter_dict(
                 author = "Тоби",
                 type = "Сказка",
                 name = "Подземелье",
                 main_hero = "Фриск",
                 num = 1,
                 route = "Пацифизм"
-                ))
+                )
+    print(letters)
 
 
