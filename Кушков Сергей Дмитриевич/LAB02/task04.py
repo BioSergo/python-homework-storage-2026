@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-TARGET_LETTERS: list = ['а','и','е','у','ы','о','э','я','ю']
+TARGET_LETTERS: tuple = 'а','и','е','у','ы','о','э','я','ю'
 
 def letter_dict(**words):
 
