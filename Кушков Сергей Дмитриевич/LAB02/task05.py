@@ -24,8 +24,8 @@ if __name__ == '__main__':
         num = input("Введите челое число:\n")
         if num.isdigit():
             true_num: int = int(num)
-            if true_num >= 0:
-                break
+            break
+
         else:
             print('Введите целое положительное число!')
 
