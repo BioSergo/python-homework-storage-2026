@@ -38,7 +38,7 @@ def header():
                 print('Индекс вне диапазона')
 
 if __name__ == '__main__':
-    result = header()
+    header()
 
 
 
