@@ -2,19 +2,19 @@
 
 from functools import reduce
 
+STANDARD_DELIMITED = " "
+
 def main():
-    """
-    Функция, которая принимает от пользователя строки и выполняет:
-        +Оставляет только слова длиной не менее 7 символов.
-        +Оставшиеся слова объединяет в пару с их длиной.
-        +Находит слово с максимальной длиной.
-        +Считает суммау букв всех отфильтрованных слов.
 
-    """
+    user_input = input("Строки через пробел:\n").split(STANDARD_DELIMITED)
 
-    user_input = input("Строки через пробел:\n").split()
+    return user_input
 
-    filter_1 = list(filter(lambda x: len(x) >= 7, user_input))
+
+if __name__ == '__main__':
+    words = main()
+
+    filter_1 = list(filter(lambda x: len(x) >= 7, words))
     print(f"Первый шаг: \n{filter_1}\n")
 
     analyzing = list(map(lambda x: (x, len(x)), filter_1))
@@ -25,9 +25,5 @@ def main():
 
     all_words_len = reduce(lambda a,b: a + b[1], analyzing, 0)
     print(f"Четвёртый шаг: \n{all_words_len}\n")
-
-if __name__ == '__main__':
-    main()
-
 
 

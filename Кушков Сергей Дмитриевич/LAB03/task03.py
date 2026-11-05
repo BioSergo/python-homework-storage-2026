@@ -4,33 +4,35 @@ import random
 
 def main():
     """
-    Функция, которая создаёт список из 20 случайных чисел и
-    фильтрует их по критериям:
-        +числа, которые делятся на 3, но не делятся на 9;
-        +числа, абсолютное значение которых больше 20;
-        +числа, которые одновременно удовлетворяют обоим условиям.
+    Функция, которая создаёт список из 20 случайных целых чисел и
+    фильтрует их по 3 критерия.
 
-    :return: Список списков, где внутри лежит список целых чисел и целое число
-    :rtype: list[list[list[int], int]]
+    :return: Список словарей
     """
 
     random_numbers_list = [random.randint(-100, 100) for _ in range(20)]
-    results = []
+
+    list_of_results = []
 
     filters = [
         lambda x: x % 3 == 0 and x % 9 != 0,
         lambda x: abs(x) > 20,
         lambda x: (x % 3 == 0 and x % 9 != 0) and abs(x) > 20
-        ]
+    ]
 
     for condition in filters:
         filtered_list = list(filter(condition, random_numbers_list))
         length = len(filtered_list)
-        results.append([filtered_list, length])
+        dict_param = {"numbers": filtered_list, "length": length}
+        list_of_results.append(dict_param)
 
-    return results
+    return list_of_results
+
 
 if __name__ == "__main__":
-    hello = main()
-    for z,y in hello:
-        print(f'{z}\nlength: {y}\n')
+    result = main()
+
+    for z in result:
+        print(f'{z["numbers"]}\nlength: {z["length"]}\n')
+
+
