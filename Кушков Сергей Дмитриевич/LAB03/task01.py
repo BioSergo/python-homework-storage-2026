@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 
+STANDARD_DELIMITED = " "
 
 if __name__ == '__main__':
 
-    user_input = input(f"Введите целые числа:\n").split()
+    user_input = input(f"Введите целые числа через пробел:\n").split(STANDARD_DELIMITED)
 
     num_list =[]
-    try:
-        num_list = [int(i) for i in user_input]
-    except ValueError:
-        print("Введите только целые числа")
+
+    for i in user_input:
+        try:
+            num = int(i)
+            num_list.append(num)
+        except ValueError:
+            print(f'{i} is not a number')
+            continue
 
     for y in num_list:
         mood_check = lambda x: (
