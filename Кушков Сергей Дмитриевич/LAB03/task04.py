@@ -5,6 +5,10 @@ from functools import reduce
 STANDARD_DELIMITED = " "
 
 def main():
+    """
+    Запрашивает строки у пользователя
+    :return: список строк
+    """
 
     user_input = input("Строки через пробел:\n").split(STANDARD_DELIMITED)
 
