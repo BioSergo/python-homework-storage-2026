@@ -21,6 +21,7 @@ def inputer():
         discount = int(input(f'Type discount(%) of product:\n '))
         PRODUCTS.append({"name": name, "price": price, "discount": discount})
         anything_else = input(f'Do you want to add another product? (y/n):\n ')
+
         if anything_else.lower() == "n":
             break
 
