@@ -7,33 +7,35 @@ import random
 LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 DIGITS = "0123456789"
 SPECIALS = "!@#$%^&*()_+-=[]{}|;:,.<>?"
-MIN_PASSWORD_LENGHT = 8
-MAX_PASSWORD_LENGHT = 64
+MIN_PASSWORD_LENGTH = 8
+MAX_PASSWORD_LENGTH = 64
 MIN_PASSWORD_VALUE = 1
 
 
-if __name__ == "__main__"
+if __name__ == "__main__":
 
-
-    parser = argparse.ArgumentParser(description="Генератор случайных паролей.")
+    parser = argparse.ArgumentParser(prog="Парольчики",
+                                     description="Генератор случайных паролей.")
 
     parser.add_argument("-l", "--length", type=int, default=12,
-        help="Длина пароля (от 8 до 64, по умолчанию 12)",
+        help="Длина пароля",
     )
     parser.add_argument("-c", "--count", type=int, default=1,
-        help="Количество паролей (по умолчанию 1)",
+        help="Количество паролей",
     )
-    parser.add_argument("--no-digits", action="store_true", help="Исключить цифры из пароля"
+    parser.add_argument("--no-digits", action="store_true",
+                        help="Исключить цифры из пароля"
     )
     parser.add_argument("--no-special", action="store_true",
         help="Исключить специальные символы из пароля",
     )
-    parser.add_argument("-o", "--output", default=None, help="Путь к файлу для сохранения паролей"
+    parser.add_argument("-o", "--output", default=None,
+                        help="Путь к файлу для сохранения паролей"
     )
 
     args = parser.parse_args()
 
-    if args.length < MIN_PASSWORD_LENGHT or args.length > MAX_PASSWORD_LENGHT:
+    if args.length < MIN_PASSWORD_LENGTH or args.length > MAX_PASSWORD_LENGTH:
         print("Ошибка: длина пароля должна быть в диапазоне от 8 до 64 символов!")
         exit(2)
 
@@ -68,7 +70,7 @@ if __name__ == "__main__"
         with open(args.output, "w", encoding="utf-8") as f:
             for p in passwords:
                 f.write(p + "\n")
-        print(f"Пароли успешно сохранены в файл '{args.output}'.")
+        print(f"Пароли сохранены в файл '{args.output}'")
 
 
 
