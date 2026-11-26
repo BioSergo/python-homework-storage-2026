@@ -1,7 +1,10 @@
 #/usr/bin/env python3
 
+MAX_VALID_SPEED = 90
+MAX_CAPACITY = 4
+MANDATORY_TIPS = 2500
 PATH_ARROW = "->"
-STOP_STATIONS: list[str] = [
+STOP_STATIONS: tuple =(
     "Ж/д станция Новый Петергоф",
     "Сашинская дорога",
     "Сашинская улица",
@@ -10,7 +13,7 @@ STOP_STATIONS: list[str] = [
     "Родниковый переулок",
     "Улица Штакеншнейдера (д. Санино)",
     "Жилгородок",
-    "Низино",  # ya tut, lol
+    "Низино",
     "Подгорная улица",
     "Центральная улица",
     "Церковь",
@@ -20,13 +23,15 @@ STOP_STATIONS: list[str] = [
     "Улица Шахматова",
     "Универсам",
     "Университетский проспект",
-    "Чебышёвская улица",
-]
+    "Чебышёвская улица"
+)
+BASE_TARIFF_PER_VALUE = 200
 
 BASE_DICT: dict[str, int] = {"speed": 100, "capacity":0}
 
 class Transport:
     """Базовый класс транспортного средства со скоростью и вместимостью."""
+
 
     def __init__(self, speed, capacity):
         """
@@ -35,25 +40,16 @@ class Transport:
         :param speed: Скорость транспорта.
         :param capacity: Вместимость транспорта.
         """
+        self._speed = 0
+        self._capacity = 0
         self.speed: int = speed
         self.capacity: int = capacity
 
-    @classmethod
-    def from_dict(cls, usr_dict):
-        """
-        Создаёт объект транспорта из словаря с параметрами.
-
-        :param usr_dict: Словарь с ключами 'speed' и 'capacity'.
-        :return: Новый экземпляр класса Transport.
-        """
-        speed = usr_dict["speed"]
-        capacity = usr_dict["capacity"]
-        return cls(speed, capacity)
 
     @property
     def speed(self):
         """Возвращает текущую скорость транспорта."""
-        return self.__speed
+        return self._speed
 
     @speed.setter
     def speed(self, speed):
@@ -63,14 +59,14 @@ class Transport:
         :param speed: Новая скорость транспорта.
         """
         if speed >= 0:
-            self.__speed = speed
+            self._speed = speed
         else:
             print(f"\n{self.__class__.__name__}: Speed value must be positive")
 
     @property
     def capacity(self):
         """Возвращает текущую вместимость транспорта."""
-        return self.__capacity
+        return self._capacity
 
     @capacity.setter
     def capacity(self, capacity):
@@ -80,13 +76,13 @@ class Transport:
         :param capacity: Новая вместимость транспорта.
         """
         if capacity >= 0:
-            self.__capacity = capacity
+            self._capacity = capacity
         else:
             print(f"\n{self.__class__.__name__}: Capacity value must be positive")
 
-    def info(self):
+    def __str__(self):
         """Выводит в консоль информацию о типе транспорта, его скорости и вместимости."""
-        print(f"\n{self.__class__.__name__}: Скорость {self.__speed} и вместимость {self.__capacity}")
+        return f"\n{self.__class__.__name__}: Скорость {self._speed} и вместимость {self._capacity}"
 
     def speed_check(self):
         """
@@ -95,11 +91,23 @@ class Transport:
         :return: True, если скорость превышена, иначе False.
         """
         speed_too_high_warning: bool = False
-        if self.__speed > 90:
+        if self._speed > MAX_VALID_SPEED:
             print(f"\n{self.__class__.__name__}: Вы превысили допустимую скорость")
             speed_too_high_warning = True
 
         return speed_too_high_warning
+
+    @classmethod
+    def from_dict(cls, usr_dict):
+        """
+        Создаёт объект транспорта из словаря с параметрами.
+
+        :param usr_dict: Словарь с ключами 'speed' и 'capacity'.
+        :return: Новый экземпляр класса Transport.
+        """
+        speed = usr_dict.get("speed", 0)
+        capacity = usr_dict.get("capacity", 0)
+        return cls(speed, capacity)
 
 class  Bus(Transport):
     """Класс автобуса, наследующий Transport и хранящий маршрут следования."""
@@ -113,14 +121,15 @@ class  Bus(Transport):
         :param capacity: Пассажировместимость автобуса.
         """
         super().__init__(speed, capacity)
-        self.destination: dict = destination
+        self._destination = {}
+        self._destination: dict = destination
 
     def reader(self):
         """Формирует и выводит в консоль маршрут автобуса со всеми остановками."""
         dest = ""
         key = ""
 
-        for key, value in self.destination.items():
+        for key, value in self._destination.items():
             if value:
                 dest = PATH_ARROW.join(value)
             else:
@@ -141,12 +150,13 @@ class Taxi(Transport):
         :param tariff: Тарифный коэффициент поездки.
         """
         super().__init__(speed, capacity)
-        self.tariff = tariff
+        self._tariff = 0
+        self._tariff = tariff
 
     def tariff_value(self):
         """Рассчитывает и выводит стоимость поездки, если пассажиров не больше 4."""
-        if self.capacity <= 4:
-            cost = (self.capacity*200)*self.tariff
+        if self.capacity <= MAX_CAPACITY:
+            cost = (self.capacity*BASE_TARIFF_PER_VALUE)*self._tariff
             print(f"\nTaxi tariff cost: {cost}")
 
 class Truck(Transport):
@@ -161,7 +171,8 @@ class Truck(Transport):
         :param capacity: Текущая загрузка (масса груза).
         """
         super().__init__(speed, capacity)
-        self.carrying: int= lift_capacity
+        self._carrying: int = 0
+        self._carrying: int= lift_capacity
 
     def carrying_cost(self):
         """
@@ -171,8 +182,8 @@ class Truck(Transport):
         """
         cost_value = 0
 
-        if self.carrying >= self.capacity:
-            cost_value += self.capacity * 10 + 2500
+        if self._carrying >= self.capacity:
+            cost_value += self.capacity * 10 + MANDATORY_TIPS
             print(f"\n{self.__class__.__name__}: Carrying cost - {cost_value}")
         else:
             print(f"\n{self.__class__.__name__}: Too much!")
@@ -184,8 +195,6 @@ if __name__ == "__main__":
 #Transport
     obj_0 = Transport(110, 0)
     obj_1 = Transport.from_dict(BASE_DICT)
-    obj_1.info()
-    obj_0.info()
 
 #Bus
     bus_obj = Bus({"360": STOP_STATIONS}, 110, 30)
@@ -198,10 +207,15 @@ if __name__ == "__main__":
     truck_obj = Truck(600, 60, 500)
     truck_obj.carrying_cost()
 
+    test_objects = [obj_0, obj_1, bus_obj, taxi_obj,truck_obj]
+    for test in test_objects:
+        print(test)
+
+    print('\n-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-')
+
     vehicle_list = [obj_0, obj_1, bus_obj, taxi_obj, truck_obj]
 
     for vehicle in vehicle_list:
-        vehicle.info()
         vehicle.speed_check()
 
 

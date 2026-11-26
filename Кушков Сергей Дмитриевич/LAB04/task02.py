@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-
+MAX_POSSIBLE_WITHDRAW_PERCENT = 0.5
 
 class BankAccount:
     """
@@ -15,6 +15,8 @@ class BankAccount:
         """
         if balance < 0:
             raise ValueError("Баланс не может-быть отрицателым")
+        self.__balance = 0.0
+        self.__holder = ''
         self.__balance: float = balance
         self.__holder: str = holder
         self.__history: list[str] = []
@@ -49,7 +51,7 @@ class BankAccount:
 
         :param money: Сумма пополнения
         """
-        if isinstance(money, (int, float)):
+        if type(money) in (int,float):
             if money > 0:
                 self.__balance += money
                 self.__history.append(f"+{money}")
@@ -66,9 +68,10 @@ class BankAccount:
         """
         if type(money) in (float,int):
             if money > 0:
-                if self.__balance > 0 and self.__balance >= money:
+                if  self.__balance > 0 and self.__balance >= money:
                     self.__balance -= money
                     self.__history.append(f"-{money}")
+
                 else:
                     print(f"На счету не хватает средств!")
             else:
@@ -84,8 +87,8 @@ class BankAccount:
         :param info_dict: Словарь с ключами 'balance' и 'holder'.
         :return: Новый объект класса BankAccount.
         """
-        balance = info_dict["balance"]
-        holder = info_dict["holder"]
+        balance = info_dict.get("balance", 0)
+        holder = info_dict.get("holder", "Unknown")
         return cls(balance, holder)
 
 
@@ -102,6 +105,7 @@ class SavingsAccount(BankAccount):
         :param percent: Процентная ставка по счёту.
         """
         super().__init__(balance, holder)
+        self.__precent = 0
         self.__percent: int = percent
 
     @property
@@ -113,7 +117,7 @@ class SavingsAccount(BankAccount):
         """
         Начисляет проценты на текущий баланс счёта.
         """
-        if isinstance(self.__percent, (int, float)) and 100 >= self.__percent >= 0:
+        if type(self.__percent) in (int, float) and 100 >= self.__percent >= 0:
             money = self.balance*(self.__percent / 100)
             super().add_to_balance(money)
 
@@ -123,8 +127,8 @@ class SavingsAccount(BankAccount):
 
         :param money: Сумма снятия.
         """
-        if isinstance(money, (int, float)):
-            if money > self.balance * 0.5:
+        if type(money) in (int,float):
+            if money > self.balance * MAX_POSSIBLE_WITHDRAW_PERCENT:
                 raise ValueError("Со сберегательного счёта нельзя снять более 50% баланса за раз!")
         super().withdraw_from_balance(money)
 

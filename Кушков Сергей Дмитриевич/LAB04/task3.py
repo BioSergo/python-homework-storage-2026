@@ -1,14 +1,18 @@
 #/usr/bin/env python3
 
+
 import random
 from abc import ABC, abstractmethod
 
+DEFAULT_RETIRE_AGE = 65
 STANDARD_DELIMITED = ","
+DEFAULT_ADULT_AGE = 18
+DEFAULT_GENDERS = ("М", "Ж", "Мужской", "Женский")
+DEFAULT_MAX_AGE = 130
+NUMBER_OF_MONTHS = 12
 
 class Person:
-    """
-    Базовый класс, описывающий человека.
-    """
+    """Базовый класс, описывающий человека."""
 
     def __init__(self, name, gender, age):
         """
@@ -18,6 +22,9 @@ class Person:
         :param gender: Пол человека ('М', 'Ж', 'Мужской', 'Женский')
         :param age: Возраст человека (от 0 до 130)
         """
+        self.age = 0
+        self.name = ''
+        self.gender = 0
         self.name = name
         self.gender = gender
         self.age = age
@@ -29,7 +36,7 @@ class Person:
 
         :return: Имя человека
         """
-        return self.__name
+        return self._name
 
     @name.setter
     def name(self, value):
@@ -39,9 +46,9 @@ class Person:
         :param value: Новое имя человека
         :raises ValueError: Если имя не строка или пустое
         """
-        if not isinstance(value, str) or len(value.strip()) == 0:
+        if not type(value) is str or len(value.strip()) == 0:
             raise ValueError("Имя должно быть непустой строкой!")
-        self.__name = value
+        self._name = value
 
     @property
     def gender(self):
@@ -50,7 +57,7 @@ class Person:
 
         :return: Пол человека
         """
-        return self.__gender
+        return self._gender
 
     @gender.setter
     def gender(self, value):
@@ -60,9 +67,9 @@ class Person:
         :param value: Пол человека
         :raises ValueError: Если передано недопустимое значение пола
         """
-        if value not in ["М", "Ж", "Мужской", "Женский"]:
+        if value not in DEFAULT_GENDERS:
             raise ValueError("Пол должен быть 'М', 'Ж', 'Мужской' или 'Женский'!")
-        self.__gender = value
+        self._gender = value
 
     @property
     def age(self):
@@ -71,7 +78,7 @@ class Person:
 
         :return: Возраст человека
         """
-        return self.__age
+        return self._age
 
     @age.setter
     def age(self, value):
@@ -81,11 +88,11 @@ class Person:
         :param value: Возраст человека
         :raises ValueError: Если возраст не целое число или вне диапазона
         """
-        if not isinstance(value, int) or value < 0 or value > 130:
+        if not type(value) is int or value < 0 or value > DEFAULT_MAX_AGE:
             raise ValueError("Возраст должен быть целым числом от 0 до 130!")
-        self.__age = value
+        self._age = value
 
-    def get_info(self):
+    def __str__(self):
         """
         Возвращает красивую строку с информацией о человеке.
 
@@ -98,7 +105,7 @@ class Person:
         Проверяет, является ли человек совершеннолетним (18+ лет).
         :return: флаг
         """
-        return self.age >= 18
+        return self.age >= DEFAULT_ADULT_AGE
 
     @classmethod
     def from_variables(cls, name, gender, age):
@@ -130,6 +137,9 @@ class Employee(Person, ABC):
         :param monthly_expenses: Усреднённые расходы в месяц
         """
         super().__init__(name, gender, age)
+        self.position = ""
+        self.salary = 0
+        self.monthly_expenses = 0.0
         self.position = position
         self.salary = salary
         self.monthly_expenses = monthly_expenses
@@ -153,7 +163,7 @@ class Employee(Person, ABC):
         :param value: Новая должность
         :raises ValueError: Если должность пустая или не строка
         """
-        if not isinstance(value, str) or len(value.strip()) == 0:
+        if type(value) is str or len(value.strip()) == 0:
             raise ValueError("Должность не может быть пустой!")
         self.__position = value
 
@@ -174,7 +184,7 @@ class Employee(Person, ABC):
         :param value: Размер зарплаты
         :raises ValueError: Если зарплата не число или меньше нуля
         """
-        if not isinstance(value, (int, float)) or value < 0:
+        if not type(value) in (int, float) or value < 0:
             raise ValueError("Зарплата должна быть положительным числом!")
         self.__salary = value
 
@@ -195,7 +205,7 @@ class Employee(Person, ABC):
         :param value: Размер расходов в месяц
         :raises ValueError: Если расходы не число или меньше нуля
         """
-        if not isinstance(value, (int, float)) or value < 0:
+        if not type(value) in (int, float) or value < 0:
             raise ValueError("Расходы должны быть положительным числом!")
         self.__monthly_expenses = value
 
@@ -211,9 +221,8 @@ class Employee(Person, ABC):
     def get_info(self):
         """
         Переопределяет метод родителя, добавляя должность и финансы.
-
         """
-        parent_info = super().get_info()
+        parent_info = super().__str__()
         status = "Жив" if self.is_alive else "Мёртв"
 
         return (f"{parent_info} должность: {self.position}, " 
@@ -238,7 +247,7 @@ class Employee(Person, ABC):
             raise ValueError("Количество месяцев не может быть отрицательным!")
         return (self.salary - self.monthly_expenses) * months
 
-    def calculate_pension_savings(self, retirement_age=65):
+    def calculate_pension_savings(self, retirement_age=DEFAULT_RETIRE_AGE):
         """
         Считает, сколько денег человек скопит до пенсии.
 
@@ -251,7 +260,7 @@ class Employee(Person, ABC):
             return 0
 
         years_left = retirement_age - self.age
-        months_left = years_left * 12
+        months_left = years_left * NUMBER_OF_MONTHS
         return self.calculate_cashflow(months_left)
 
 
@@ -376,8 +385,9 @@ class Designer(Employee):
         Инициализация дизайнера со списком инструментов
         """
         super().__init__(name, gender, age, "Дизайнер", salary, monthly_expenses)
-        if not isinstance(tools, list) or len(tools) == 0:
+        if not type(tools) is list or len(tools) == 0:
             raise ValueError("Список инструментов дизайнера не должен быть пустым!")
+        self.tools = []
         self.tools = tools
 
     def create_mockup(self):
@@ -410,7 +420,8 @@ if __name__ == "__main__":
 
     p_name, p_gender, p_age = "Иван", "М", 17
     person1 = Person.from_variables(p_name, p_gender, p_age)
-    print(person1.get_info())
+    print(person1)
+
     print("Совершеннолетний?", person1.is_adult())
 
 
